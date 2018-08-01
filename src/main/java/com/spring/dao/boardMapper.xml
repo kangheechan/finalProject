@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- namespace=연결되는 인터페이스 -->    
+<mapper namespace="com.spring.dao.BoardInter">
+
+	<!-- 찜목록 리스트 -->
+	<select id="mycartCall" resultType="com.spring.dto.CartDTO">
+		select p.pro_idx, p.pro_name, p.pro_price, c.cart_date, c.mem_id, c.cart_idx from product p, cart c where p.pro_idx = c.pro_idx  And c.mem_id = #{param1} 
+	</select>
+	
+	<!-- 찜 추가 -->
+	<insert id="cartInsert" parameterType="com.spring.dto.CartDTO" useGeneratedKeys="true" keyProperty="cart_idx" keyColumn="cart_idx">
+		INSERT INTO cart(cart_idx, mem_id, pro_idx, shop_idx) VALUES(cart_idx_seq.NEXTVAL, #{mem_id}, #{pro_idx}, #{shop_idx})
+	</insert>
+	
+	<!-- 찜한사람 찜 인덱스 얻기 -->
+	<select id="getCartIdx" resultType="String">
+		SELECT cart_idx FROM Cart WHERE mem_id = #{param1} AND pro_idx = #{param2}
+	</select>
+	
+	<!-- 찜 삭제 -->
+	<delete id="cartdel">
+	 	DELETE FROM cart WHERE cart_idx = #{param1}
+	 </delete>
+	 
+	 <!-- 상품 리스트 -->
+	 <select id="myproduct" resultType="com.spring.dto.ProductDTO">
+	 	select * from product where mem_id = #{param1} order by pro_idx DESC
+	 </select>
+	
+	<!-- 상품 삭제 -->
+	<delete id="prodel">
+	 	DELETE FROM product WHERE pro_idx = #{param1}
+	 </delete>
+	 
+	 <!-- 구매내역 -->
+	  <select id="mybuyCall" resultType="com.spring.dto.WalletDTO">
+	 	select p.pro_name, w.wallet_idx, w.wallet_date, w.mem_id from product p, wallet w where 		p.pro_idx = w.pro_idx and w.mem_id = #{param1}
+	 </select>
+	 	 
+   <!--후기 리스트 -->
+   <select id="reviewList" resultType="com.spring.dto.ShopReplyDTO">
+   SELECT * FROM ShopReply WHERE shop_idx = #{param1} ORDER BY sreply_idx DESC 
+   </select>
+   <!-- 후기작성 -->
+   <insert id="reviewWrite" parameterType="com.spring.dto.ShopReplyDTO" useGeneratedKeys="true" keyProperty="Sreply_Idx" keyColumn="Sreply_Idx">
+   INSERT  INTO ShopReply(SREPLY_IDX,SREPLY_CONTENT,SREPLY_DATE,MEM_ID,SHOP_IDX,SREPLY_STAR) VALUES (SHOPREPLY_SEQ.NEXTVAL,#{sreply_content},SYSDATE,#{mem_id},#{shop_idx},#{sreply_star})
+   </insert>
+   <!--후기삭제 -->
+   <delete id="reviewdel">
+       DELETE FROM ShopReply WHERE sreply_idx = #{param1}
+    </delete>
+    <!-- 후기 수정 -->
+    <update id="reviewupdate"  >
+       UPDATE ShopReply SET sreply_content=#{param2},sreply_star=#{param3} WHERE sreply_idx=#{param1}
+    </update>
+	 
+	 <!--요청게시판 리스트  -->
+	 <select id="RequestList" resultType="com.spring.dto.RequestBoardDTO">
+	 	SELECT * FROM RequestBoard ORDER BY req_idx ASC
+	 </select>
+	 
+	 <!--요청게시판 조회수  -->
+	 <update id="upHit">
+	 	UPDATE RequestBoard SET bHit = bHit+1 WHERE req_idx = #{param1}
+	 </update>
+	 
+	 <!--요청게시판 상세보기  -->
+	 <select id="RequestDetail" resultType="com.spring.dto.RequestBoardDTO">
+	 	SELECT req_idx, mem_id, req_subject, req_content,req_date,rimg_path
+			FROM RequestBoard WHERE req_idx = #{req_idx}
+	 </select>
+	 
+	 <!--요청게시판 글쓰기  -->
+	 <insert id="RequestWrite" parameterType="com.spring.dto.RequestBoardDTO" useGeneratedKeys="true" keyProperty="req_idx" keyColumn="req_idx">
+		INSERT INTO RequestBoard(req_idx, mem_id, req_subject, req_content, rimg_path)
+			VALUES(req_idx_seq.NEXTVAL, #{mem_id}, #{req_subject}, #{req_content},#{rimg_path})
+	</insert>
+	
+	<!--요청게시판 삭제  -->
+	<delete id="Request_noticeDelete">
+		DELETE FROM RequestBoard WHERE req_idx = #{param1}
+	</delete>
+	
+	<!--요청게시판 수정  -->
+	<update id="Request_update" parameterType="com.spring.dto.RequestBoardDTO">
+	 	UPDATE RequestBoard SET req_subject = #{req_subject}, req_content = #{req_content}
+			WHERE req_idx = #{req_idx}	
+	 </update>
+	 
+	 
+	 <!-- 댓글리스트 -->
+	<select id="replylist" resultType="com.spring.dto.BoardReplyDTO">
+	SELECT * FROM boardreply WHERE req_idx=#{idx} ORDER BY breply_idx
+	</select>
+	
+	<!-- 댓글삭제 -->
+	<delete id="replyDel">
+	 	DELETE FROM boardreply WHERE breply_idx = #{param1}
+	 </delete>
+	 
+	 <!-- 댓글작성 -->
+	 <insert id="replyWrite" parameterType="com.spring.dto.BoardReplyDTO" >
+		INSERT INTO boardreply(breply_idx,breply_content,mem_id,req_idx)
+			VALUES(breply_idx_seq.NEXTVAL,#{breply_content},#{mem_id},#{req_idx})
+	 </insert>
+	 
+	 <!-- 댓글 수정 -->
+	 <update id="replyup" >
+	 	UPDATE boardreply SET breply_content = #{param1} WHERE breply_idx = #{param2}	
+	 </update>
+	 
+	 <select id="speller" resultType="com.spring.dto.ProductDTO">
+	 	select p.pro_idx, p.pro_name, p.pro_price, p.pro_size, m.mem_size, m.mem_id from product p, member m where p.pro_size = m.mem_size and m.mem_id = #{param1};
+	 </select>
+	 
+	 <!-- 최근본상품 저장  -->
+	 <insert id="RecentPrd" >
+	 	INSERT INTO recentPrd VALUES(recent_idx_seq.NEXTVAL,#{param1},#{param2})
+	 </insert>
+	 
+	 <!-- 최근본상품 리스트  -->
+	  <select id="recentList" resultType="com.spring.dto.RecentPrdDTO">
+		<![CDATA[	  	  
+	  	 	select pro_idx, img_main from (select r.pro_idx, i.img_main from RecentPrd r,productimg i where r.pro_idx=i.pro_idx AND  r.mem_id = #{param1} order by recent_idx desc ) where rownum between 1 and 2
+	  	  ]]> 
+	  </select>
+	  
+	  <!--최근본상품 삭제  -->
+	<delete id="recentCnt">
+		<![CDATA[	
+			DELETE * FROM  RecentPrd WHERE rownum>=3
+	 	]]> 
+	</delete>
+	
+	
+	<!--후기작성 조건확인  -->
+   <select id="writerCheck" resultType="com.spring.dto.ProductDTO">
+      SELECT * FROM PRODUCT WHERE pro_buyer =#{param2} AND shop_idx = #{param1}
+   </select>
+   <select id="reviewcnt" resultType="Integer">
+      SELECT COUNT(*) FROM ShopReply WHERE mem_id = #{param2} AND shop_idx = #{param1}
+   </select>
+	
+	
+
+</mapper>

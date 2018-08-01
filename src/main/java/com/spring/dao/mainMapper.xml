@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- namespace=연결되는 인터페이스 -->    
+<mapper namespace="com.spring.dao.MainInter">
+
+   <!-- 메인리스트 출력 -->
+   <select id="getMainList" resultType="com.spring.dto.ProductDTO">
+      SELECT i.img_main, p.pro_idx, p.pro_name, p.pro_size, p.pro_price, p.pro_state FROM ProductImg i , Product p  WHERE i.pro_idx = p.pro_idx AND pro_state = '판매중'
+   </select>
+   
+   <!-- 멤버 상점개설 여부 상태값 얻기 -->   
+   <select id="getMemShopState" resultType="String">
+      SELECT mem_shop FROM member WHERE mem_id = #{param1}
+   </select>
+   
+   <!-- 상점명 입력값 넣기 -->
+   <insert id="setShopName">
+      INSERT INTO shop(shop_idx, shop_name, mem_id) VALUES(shop_idx_seq.NEXTVAL, #{param1}, #{param2})
+   </insert>
+   
+   <!-- 상점명 중복값 확인 -->
+   <select id="shopOverlay" resultType="String">
+      SELECT shop_name FROM shop WHERE shop_name = #{param1}
+   </select>
+   
+   <!-- 상점개설 여부 상태값 수정 -->
+   <update id="upShopState">
+      UPDATE member SET mem_shop = 1 WHERE mem_id = #{param1}
+   </update>
+   
+   <!-- 개인상점 정보 출력 -->
+   <select id="getShopInfo" resultType="com.spring.dto.ShopDTO">
+      SELECT  shop_idx, shop_name, shop_sellcount, shop_date, mem_id FROM shop WHERE mem_id = #{param1}
+   </select>
+   
+   <!-- 리뷰숫자 -->
+   <select id="count" resultType="Integer">
+      SELECT Count(*) From Shopreply WHERE shop_idx= #{param1}
+   </select>
+   
+   <!--별점 총합 -->
+   <select id="star_sum" resultType="Integer">
+      SELECT SUM(SREPLY_STAR) FROM Shopreply WHERE shop_idx = #{param1}
+   </select>
+   
+   <!-- 상점인덱스 세션값 얻기 -->
+   <select id="getShopIdx" resultType="String">
+      SELECT shop_idx FROM shop WHERE mem_id = #{param1}
+   </select>
+   
+   <!-- 테스트값 삽입 -->
+   <insert id="testInsert">
+      INSERT INTO Product(pro_idx, pro_price, pro_name,  pro_memo, pro_state, shop_idx, brand_idx, gender_idx, shoes_idx, mem_id, pro_size)
+         VALUES(pro_idx_seq.NEXTVAL, 0, '개설일', ' ',  ' ', #{param2}, 6, 1, 1, #{param1}, '250mm')
+   </insert>
+   
+   <!-- 상품등록(이미지제외) -->
+   <insert id="proInsert" parameterType="com.spring.dto.ProductDTO" useGeneratedKeys="true" keyProperty="pro_idx" keyColumn="pro_idx">
+      INSERT INTO product(pro_idx, pro_price, pro_name, pro_memo, shop_idx, brand_idx, gender_idx, shoes_idx, mem_id, pro_size)
+         VALUES(pro_idx_seq.NEXTVAL, #{pro_price}, #{pro_name}, #{pro_memo}, 
+         #{shop_idx}, #{brand_idx}, #{gender_idx}, #{shoes_idx}, #{mem_id},#{pro_size})
+   </insert>
+   
+   <!-- 상품등록(메인이미지) -->
+   <insert id="mainImgInsert">
+      INSERT INTO productImg(img_idx, img_main, pro_idx) VALUES(img_idx_seq.NEXTVAL, #{param1}, #{param2}) 
+   </insert>
+   
+   <!-- 상품등록(서브이미지) -->
+   <update id="subImgUpdate">
+      UPDATE productImg SET img_sub = #{param1} WHERE pro_idx = #{param2}
+   </update>
+   
+   <!-- 상세보기 -->
+   <select id="detail" resultType="com.spring.dto.ProductDTO" >
+      SELECT i.img_main, i.img_sub, p.pro_idx,p.shop_idx, p.gender_idx, p.shoes_idx, p.brand_idx, p.pro_name, p.pro_size, p.pro_price, p.pro_state, p.pro_memo, p.mem_id, m.mem_addr, m.mem_phone FROM ProductImg i , Product p, Member m WHERE i.pro_idx = p.pro_idx AND p.mem_id = m.mem_id AND p.pro_idx = #{param1}
+   </select>
+   
+   <select id="getCartList" resultType="com.spring.dto.CartDTO">
+      SELECT * FROM cart
+   </select>
+   
+   <!-- ID 및 shopIdx 얻기(상품) -->
+   <select id="myproduct" resultType="com.spring.dto.ProductDTO">
+      SELECT pro_name, pro_idx, pro_date, pro_state, shop_idx, mem_id FROM Product WHERE shop_idx = #{param1} ORDER BY pro_state DESC
+   </select>
+   
+   <!-- ID 및 shopIdx 얻기(구매내역) -->
+   <select id="mybuy" resultType="com.spring.dto.ProductDTO">
+      SELECT pro_name, pro_idx, pro_date, pro_state, shop_idx, mem_id FROM Product WHERE shop_idx = #{param1}
+   </select>
+   
+   <!-- ID 및 shopIdx 얻기(찜목록) -->
+   <select id="mycart" resultType="com.spring.dto.ProductDTO">
+      SELECT pro_name, pro_idx, pro_date, pro_state, shop_idx, mem_id FROM Product WHERE shop_idx = #{param1}
+   </select>
+   
+   <!-- ID 및 shopIdx 얻기(후기) -->
+   <select id="myreview" resultType="com.spring.dto.ProductDTO">
+      SELECT pro_name, pro_idx, pro_date, pro_state, shop_idx, mem_id FROM Product WHERE shop_idx = #{param1}
+   </select>
+   
+   <!-- ID 및 shopIdx 얻기(내 정보) -->
+   <select id="myinfo" resultType="com.spring.dto.ProductDTO">
+      SELECT pro_name, pro_idx, pro_date, pro_state, shop_idx, mem_id FROM Product WHERE shop_idx = #{param1}
+   </select>
+   
+   <!--검색  -->
+   <select id="list" parameterType="HashMap" resultType="com.spring.dto.ProductDTO" >
+           SELECT *
+      FROM Product p JOIN Brand_category b ON p.brand_idx  = b.brand_idx   JOIN ProductImg i ON   p.pro_idx = i.pro_idx  
+      WHERE P.pro_name LIKE '%'||#{MainkeyWord}||'%' OR B.brand_name LIKE '%'||#{MainkeyWord}||'%' OR P.pro_size LIKE '%'||#{MainkeyWord}||'%'       
+   </select>
+   
+   <!--맞춤 상품  -->
+   <select id="SpellertList" resultType="com.spring.dto.ProductDTO">
+         SELECT p.pro_idx, i.img_main, p.pro_name, p.pro_price, p.pro_size FROM Product p JOIN Member m JOIN ProductImg i ON m.mem_id = #{param1} ON m.mem_size = p.pro_size AND p.pro_idx = i.pro_idx      
+   </select>
+   
+   <!-- 구매자 존재 여부 확인 -->
+   <select id="buyerCheck" resultType="String">
+         SELECT mem_id FROM member WHERE mem_id = #{param1}
+   </select>
+   
+   <!-- 구매자 업데이트 -->
+   <update id="setBuyer" >
+         UPDATE Product SET pro_buyer = #{param1} WHERE pro_idx = #{param2}
+   </update>
+   
+   <!-- 판매상태 변경 -->
+   <update id="upProState">
+         UPDATE Product SET pro_state = '판매완료' WHERE pro_idx = #{param1}
+   </update>
+   
+   <!-- 찜개수 -->
+   <select id="cartcount" resultType="String">
+      SELECT count(PRO_IDX) FROM cart WHERE PRO_IDX= #{param1}
+   </select>
+   
+   <!--카테고리 검색시 리스트 -->
+   <!-- WHERE p.brand_idx = #{param1} AND p.gender_idx=#{param2} AND p.shoes_idx = #{param3} -->
+	<select id="categorylist" resultType="com.spring.dto.ProductDTO">
+		SELECT i.img_main, p.pro_idx, p.pro_name, p.pro_price, p.pro_size FROM PRODUCT p, ProductImg i 
+		<where>
+			i.pro_idx = p.pro_idx
+			<if test="param1 != 0">
+				AND p.brand_idx = #{param1}
+			</if>
+			<if test="param2 != 0">
+				AND p.gender_idx = #{param2}				
+			</if>
+			<if test="param3 != 0">
+				AND p.shoes_idx = #{param3}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 구매내역 삽입 -->
+   <insert id="setWallet">
+      INSERT INTO Wallet(wallet_idx, mem_id, pro_idx) VALUES(wallet_idx_seq.NEXTVAL, #{param2}, #{param1})
+   </insert>
+	
+	<!-- 구매내역 정보 뽑아오기 -->
+   <select id="myWallet" resultType="com.spring.dto.WalletDTO">
+      SELECT w.wallet_idx, w.pro_idx, w.mem_id, w.wallet_date, p.pro_name, p.shop_idx FROM Wallet w, Product P WHERE w.pro_idx = p.pro_idx AND w.mem_id = #{param1}
+   </select>
+   
+   <!--공지사항상세보기  -->
+   <select id="noticeDetail"  resultType="com.spring.dto.NoticeBoardDTO">
+         SELECT notice_idx, admin_id, notice_subject, notice_content,notice_date
+         FROM NoticeBoard WHERE notice_idx = #{notice_idx}
+   </select>
+   
+     <!--공지사항조회수  -->
+   <update id="upHit">
+       UPDATE NoticeBoard SET bHit = bHit+1 WHERE notice_idx = #{param1}
+    </update>
+   
+   <!--판매갯수올리기  -->
+   <update id="upSellCount">
+       UPDATE Shop SET shop_sellCount = shop_sellCount+1 WHERE shop_idx = #{param1}
+    </update>
+   
+   
+   
+</mapper>

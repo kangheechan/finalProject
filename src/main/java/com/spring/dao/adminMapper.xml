@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- namespace=연결되는 인터페이스 -->    
+<mapper namespace="com.spring.dao.AdminInter">
+<!-- 아이디 중복 체크 -->
+
+<select id="memberlist" resultType="com.spring.dto.MemberDTO">
+	SELECT * FROM member 
+</select>
+
+<select id="list" parameterType="hashMap" resultType="com.spring.dto.MemberDTO">
+		SELECT * FROM member
+		<where>
+			<if test="keyWord != null and keyField == 0 ">
+				(mem_state='0' OR mem_state='1' OR mem_state='2') AND mem_id LIKE '%'||#{keyWord}||'%'
+			</if>
+			<if test="keyField == 1 ">
+				mem_state='0' AND mem_id LIKE '%'||#{keyWord}||'%'
+			</if>
+			<if test="keyField == 2 ">
+				mem_state='1' AND mem_id LIKE '%'||#{keyWord}||'%'
+			</if>
+			<if test="keyField == 3 ">
+				mem_state='2' AND mem_id LIKE '%'||#{keyWord}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<delete id="memdel">
+	 	DELETE FROM member WHERE mem_id = #{param1}
+	 </delete>
+	 
+	 <update id="memstate">
+	 	UPDATE member SET mem_state= #{param1} WHERE mem_id= #{param2}
+	 </update>
+	 
+	 <select id="adminreply" resultType="com.spring.dto.ShopReplyDTO">
+	SELECT * FROM ShopReply
+</select>
+
+	<delete id="replydel">
+	 	DELETE FROM ShopReply WHERE sreply_idx = #{param1}
+	 </delete>
+	 
+	 <select id="ReplylistSearch" parameterType="hashMap" resultType="com.spring.dto.ShopReplyDTO">
+		SELECT * FROM ShopReply
+		<where>
+			<if test="keyWord != null and keyField == 'mem_id' ">
+				mem_id LIKE '%'||#{keyWord}||'%'
+			</if>
+			<if test="keyWord != null and keyField == 'sreply_content' ">
+				sreply_content LIKE '%'||#{keyWord}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<insert id="adminjoin" parameterType="com.spring.dto.AdminDTO">
+		INSERT INTO admin(admin_id,admin_pw) VALUES(#{admin_id}, #{admin_pw})
+	</insert>
+	
+	 <!-- 패스워드 뽑아오기 및 로그인-->
+   <select id="admin_login" resultType="String">
+      SELECT admin_pw FROM admin WHERE admin_id = #{param1}
+   </select>
+	
+	<select id="noticeList" resultType="com.spring.dto.NoticeBoardDTO">
+	 	SELECT * FROM NoticeBoard ORDER BY notice_idx ASC
+	 </select>
+	 
+	 <insert id="noticeWrite" parameterType="com.spring.dto.NoticeBoardDTO" useGeneratedKeys="true" keyProperty="notice_idx" keyColumn="notice_idx">
+		INSERT INTO NoticeBoard(notice_idx,admin_id, notice_subject, notice_content)
+			VALUES(notice_idx_seq.NEXTVAL,#{admin_id},#{notice_subject},#{notice_content})
+	 </insert>
+	 
+	 <select id="a_noticeDetail" resultType="com.spring.dto.NoticeBoardDTO">
+	 	SELECT notice_idx, admin_id, notice_subject, notice_content,notice_date
+			FROM NoticeBoard WHERE notice_idx = #{notice_idx}
+	 </select>
+	 
+	 <update id="a_noticeUpdate" parameterType="com.spring.dto.NoticeBoardDTO">
+	 	UPDATE NoticeBoard SET notice_subject = #{notice_subject}, notice_content = #{notice_content}
+			WHERE notice_idx = #{notice_idx}	
+	 </update>
+	 
+	 <delete id="a_noticeDelete">
+		 DELETE FROM NoticeBoard WHERE notice_idx = #{param1}
+	 </delete>
+	 
+	 <update id="upHit">
+	 	UPDATE NoticeBoard SET bHit = bHit+1 WHERE notice_idx = #{param1}
+	 </update>
+	 
+	 
+
+	
+</mapper>
