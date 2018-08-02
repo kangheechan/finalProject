@@ -101,15 +101,24 @@ a.btn-layerClose {
    color: #fff;
    line-height: 25px;
    text-decoration: none;
+   border: 1px solid black;
 }
 
 a.btn-layerClose:hover {
    background-color: white;
    color: black;
+   border: 1px solid black;
 }
 
 #shopname {
    margin-left: 28%;
+}
+
+#shopname2{
+   background-color: black;
+   border: 0px;
+   color: white;
+   cursor: pointer;
 }
 
 #shop_idx {
@@ -134,12 +143,12 @@ a.btn-layerClose:hover {
 }
 #map{
 	margin-left: 23%;
-    margin-top: -10.7%;	 
+    margin-top: -13.8%;	 
 }
 #hh3{
 	border: 1px solid;
     width: 19%;
-    height: 150px;
+    height: 190px;
     margin-top: 2%;
     border-radius: 10px;
 }
@@ -171,9 +180,9 @@ a.btn-layerClose:hover {
          <div class="pop-container">
             <div class="pop-conts">
                <!--content //-->
-               <h4 class="ctxt mb20">상점 이름을 입력 하세요</h4>
-               <input id="shopname" type="text"> <input type="button"
-                  value="중복확인" onclick="shopOverlay()" />
+               <h4 class="ctxt mb20" style="margin-left: 30%;">상점 이름을 입력 하세요</h4>
+               <input id="shopname" type="text"> <input id="shopname2" type="button"
+                  value="중복확인" onclick="shopOverlay()"/>
                </p>
 
                <div class="btn-r">
@@ -184,7 +193,7 @@ a.btn-layerClose:hover {
          </div>
       </div>
    </div>
-   <div id="map" style="width: 200px; height: 150px;"></div> 
+   <div id="map" style="width: 200px; height: 200px;"></div> 
    <c:if test="${sessionScope.shopState eq 1}">
       <div id="mymenu">
          <a href="./myproduct?shopIdx=${sessionScope.shopIdx}">상품</a> <a
@@ -408,10 +417,10 @@ a.btn-layerClose:hover {
                                         + data.dto.shop_name + '<br/><br/>'
                                         + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
                                         + data.dto.shop_sellcount + '<br/><br/>'
+                                        + '상점 평점 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                        + data.star_avg + " 점" + '<br/><br/>'
                                         + '상점 개설 날짜 &nbsp;&nbsp; '
                                         +date.toLocaleDateString("ko-KR") + '<br/><br/>'
-                                        + '상점 평점 &nbsp;&nbsp; '
-                                        + data.star_avg + " 점"
                                         + '</h3>');
                          }else{
                         	 $('#shopInfo').append(
@@ -419,10 +428,10 @@ a.btn-layerClose:hover {
                                            + data.dto.shop_name + '<br/><br/>'
                                            + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
                                            + data.dto.shop_sellcount + '<br/><br/>'
+                                           + '상점 평점 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                           + "0점" + '<br/><br/>'
                                            + '상점 개설 날짜 &nbsp;&nbsp; '
                                            +date.toLocaleDateString("ko-KR") + '<br/><br/>'
-                                           + '상점 평점 &nbsp;&nbsp; '
-                                           + "0점"
                                            + '</h3>');
                          }
                   }

@@ -68,7 +68,7 @@
       </div>
       <br />
 
-      <h2>상품보기 &nbsp;&nbsp;&nbsp;&nbsp; <a href="./category">더 보기</a> </h2> 
+      <h2>상품보기 &nbsp;&nbsp;&nbsp;&nbsp; <a href="./category" style="color: black;">더 보기</a> </h2> 
       <div class="newImg">
          <c:forEach items="${product}" var="product" varStatus="status">
          <c:if test="${status.count le 10}">

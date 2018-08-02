@@ -79,7 +79,7 @@
           <c:if  test ="${sessionScope.loginId eq null}">
              <img class=noview src="resources/noview.jpg">
           </c:if>
-          <a href="https://thecheat.co.kr/rb/?mod=_search"><img class="the" src="resources/theCheat.jpg" /></a> 
+          <a href="https://thecheat.co.kr/rb/?mod=_search"  onclick="window.open(this.href, '_blank'); return false;"><img class="the" src="resources/theCheat.jpg" /></a> 
        </div>
       <%--  <input id="pro_idx" class="proo" type="hidden" value="${product.pro_idx}"/> --%>
    </body>

@@ -239,12 +239,12 @@
    
    	#map{
 	margin-left: 23%;
-    margin-top: -10.7%;	 
+    margin-top: -13.8%;	 
 }
 #hh3{
 	border: 1px solid;
     width: 19%;
-    height: 150px;
+    height: 190px;
     margin-top: 2%;
     border-radius: 10px;
 }
@@ -265,7 +265,7 @@
    
 
       <div id="shopInfo"></div>
-      <div id="map" style="width: 200px; height: 150px;"></div>
+      <div id="map" style="width: 200px; height: 200px;"></div>
 
    <div id="mymenu">
       <c:if test="${myReview['0'].shop_idx eq sessionScope.shopIdx}">
@@ -404,28 +404,28 @@ function getShopInfo() {
             if (data.dto != null) {
             	var date = new Date(data.dto.shop_date);
             	if(data.star_avg != null){
-             		  $('#shopInfo').append(
-                            '<h3 id="hh3">상점 이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
-                                  + data.dto.shop_name + '<br/><br/>'
-                                  + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
-                                  + data.dto.shop_sellcount + '<br/><br/>'
-                                  + '상점 개설 날짜 &nbsp;&nbsp; '
-                                  +date.toLocaleDateString("ko-KR") + '<br/><br/>'
-                                  + '상점 평점 &nbsp;&nbsp; '
-                                  + data.star_avg + " 점"
-                                  + '</h3>');
-                   }else{
-                  	 $('#shopInfo').append(
-                               '<h3 id="hh3">상점 이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
-                                     + data.dto.shop_name + '<br/><br/>'
-                                     + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
-                                     + data.dto.shop_sellcount + '<br/><br/>'
-                                     + '상점 개설 날짜 &nbsp;&nbsp; '
-                                     +date.toLocaleDateString("ko-KR") + '<br/><br/>'
-                                     + '상점 평점 &nbsp;&nbsp; '
-                                     + "0점"
-                                     + '</h3>');
-                   }
+            		 $('#shopInfo').append(
+                             '<h3 id="hh3">상점 이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                   + data.dto.shop_name + '<br/><br/>'
+                                   + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
+                                   + data.dto.shop_sellcount + '<br/><br/>'
+                                   + '상점 평점 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                   + data.star_avg + " 점" + '<br/><br/>'
+                                   + '상점 개설 날짜 &nbsp;&nbsp; '
+                                   +date.toLocaleDateString("ko-KR") + '<br/><br/>'
+                                   + '</h3>');
+                    }else{
+                   	 $('#shopInfo').append(
+                                '<h3 id="hh3">상점 이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                      + data.dto.shop_name + '<br/><br/>'
+                                      + '상품판매 개수 &nbsp;&nbsp;&nbsp; '
+                                      + data.dto.shop_sellcount + '<br/><br/>'
+                                      + '상점 평점 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '
+                                      + "0점" + '<br/><br/>'
+                                      + '상점 개설 날짜 &nbsp;&nbsp; '
+                                      +date.toLocaleDateString("ko-KR") + '<br/><br/>'
+                                      + '</h3>');
+                    }
              }
          },
          error : function(err) {
@@ -564,7 +564,7 @@ function getShopInfo() {
                   obj.success = function(data) {
                      if (data.success > 0) {
                         alert("댓글쓰기에 성공 했습니다.");
-                        listPrint();
+                        location.reload();
                         } else {
                         alert("댓글쓰기에 실패 했습니다.");
                      }

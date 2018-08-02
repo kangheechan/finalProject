@@ -159,11 +159,11 @@
 
       <div id="mainImg" style="height: 200;" class="cycle-slideshow"; data-cycle-loader="wait";    data-cycle-timeout="1000">
       	<form name=brandform>
-         <a><input type="checkbox" onclick="javascript:checkdbrand(0)" id="oper" name=brand value="1">나이키</a>
-         <a><input type="checkbox" onclick="javascript:checkdbrand(1)" id="oper" name=brand value="2">아디다스</a>
-         <a><input type="checkbox" onclick="javascript:checkdbrand(2)" id="oper" name=brand value="3">휠라</a>
-         <a><input type="checkbox" onclick="javascript:checkdbrand(3)" id="oper" name=brand value="4">리복</a>
-         <a><input type="checkbox" onclick="javascript:checkdbrand(4)" id="oper" name=brand value="5">데쌍트</a></br></br></br></br>
+         <a><input type="checkbox" onclick="javascript:checkdbrand(0)" id="oper" name=brand value="1">NIKE</a>
+         <a><input type="checkbox" onclick="javascript:checkdbrand(1)" id="oper" name=brand value="2">Adidas</a>
+         <a><input type="checkbox" onclick="javascript:checkdbrand(2)" id="oper" name=brand value="3">FILA</a>
+         <a><input type="checkbox" onclick="javascript:checkdbrand(3)" id="oper" name=brand value="4">Reebok</a>
+         <a><input type="checkbox" onclick="javascript:checkdbrand(4)" id="oper" name=brand value="5">Descente</a></br></br></br></br>
         </form>   
               
          <form name=genderform>
